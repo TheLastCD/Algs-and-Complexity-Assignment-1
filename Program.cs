@@ -126,7 +126,7 @@ namespace Algs_and_Complexity_Assignment_1
                     }
                     break;
                 case 2:
-                    Searching(File);
+                    Searching(File,asc);
                     break;
                 default:
                     break;
@@ -155,7 +155,7 @@ namespace Algs_and_Complexity_Assignment_1
             }
             return 1;
         }
-        public static void Searching(List<int> SortedArray)
+        public static void Searching(List<int> SortedArray,bool asc)
         {
             var x = new Searching_Algorithms();
             string search = "Linear";
@@ -178,13 +178,13 @@ namespace Algs_and_Complexity_Assignment_1
             switch (search)
             {
                 case "Linear":
-                    Indexes = x.Linear_Search(SortedArray, ValueSearch);
+                    Indexes = x.Linear_Search(SortedArray, ValueSearch,asc);
                     break;
                 case "Binary":
-                    //Index = x.Binary_Search(SortedArray, ValueSearch);
+                    Indexes = x.Binary_Search(SortedArray, ValueSearch,asc);
                     break;
                 default:
-                    Indexes = x.Linear_Search(SortedArray, ValueSearch);
+                    Indexes = x.Linear_Search(SortedArray, ValueSearch,asc);
                     break;
             }
             if(SortedArray[Indexes[0]] != ValueSearch)
@@ -207,73 +207,80 @@ namespace Algs_and_Complexity_Assignment_1
 
     public class Searching_Algorithms
     {
-        public int Binary_Search(List<int> array, int ValueFind)
+        public List<int> Binary_Search(List<int> array, int ValueFind,bool asc)
         {
-            bool found = false, thing = false;
-            List<int> fudge = new List<int>();
+            List<int> Indexes = new List<int>();
             int index = -1,
                 first = 0,
                 last = array.Count - 1,
                 midpoint,
-                nearLow = 0,
-                nearHigh = array.Count,
-                highTemp = array.Count +1;
-            while (first <= last && !found)
+                temp = 1;
+            while (first <= last)
             {
                 midpoint = Convert.ToInt32(Math.Floor((double)((first + last) / 2)));
                 if (array[midpoint] == ValueFind)
                 {
-                    index = midpoint;
-                    array[index] = -1;
-                    foreach (int lm in array)
-                        Console.Write($"{lm}, ");
-                    fudge.Add(index);
-                    while (!thing)
+                    if(temp == index)
                     {
-                        int xlm = Binary_Search(array, ValueFind);
-                        if (xlm == -1)
-                            thing = true;
-                        else
-                        {
-                            if (array[xlm] == ValueFind)
-                                fudge.Add(index);
-                            else thing = true;
-
-                        }
-
+                        break;
                     }
-                    
+                    else
+                    {
+                        Indexes.Add(midpoint);
+                        index = midpoint;
+                    }
                     
                 }
                 else
                 {
-                    if (array[midpoint] < ValueFind)
+                    if (asc)
                     {
-                        first = midpoint + 1;
-                        nearLow = midpoint;
+                        if (array[midpoint] < ValueFind)
+                        {
+                            first = midpoint + 1;
+                        }
+                        else
+                        {
+                            last = midpoint - 1;
+                        }
                     }
                     else
                     {
-                        last = midpoint - 1;
+                        if (array[midpoint] > ValueFind)
+                        {
+                            first = midpoint + 1;
+                        }
+                        else
+                        {
+                            last = midpoint - 1;
+                        }
                     }
-                }
-            }
-            nearHigh = nearLow + 1;
-            //if (index == -1)
-            //{
-            //    while (array[nearHigh] == array[nearLow])
-            //        nearHigh++;
-            //    if ((array[nearHigh] - ValueFind) > (ValueFind - array[nearLow]))
-            //        index = array[nearLow];
-            //    else index = array[nearHigh];
-            //}
-            foreach (int turd in fudge)
-                Console.Write($"{turd}, ");
 
-            return index;
+                }
+                temp = midpoint;
+            }
+            if (index == -1 && first > last)
+            {
+                if (asc)
+                {
+                    if ((array[first] - ValueFind) < (ValueFind - array[last]))
+                        Indexes.Add(first);
+                    else
+                        Indexes.Add(last);
+                }
+                else
+                {
+                    if ((array[first] - ValueFind) > (ValueFind - array[last]))
+                        Indexes.Add(first);
+                    else
+                        Indexes.Add(last);
+                }
+                
+            }
+            return Indexes;
         }
 
-        public List<int> Linear_Search(List<int> array, int ValueFind)
+        public List<int> Linear_Search(List<int> array, int ValueFind, bool asc)
         {
             List<int> MultipleIndex = new List<int>();
             int TempHoldL = 0, TempHoldH = array.Count - 1;
@@ -287,22 +294,47 @@ namespace Algs_and_Complexity_Assignment_1
                 }
                 else
                 {
-                    if(array[i] < ValueFind)
-                        TempHoldL = i;
+                    if (asc)
+                    {
+                        if (array[i] < ValueFind)
+                            TempHoldL = i;
+                        else
+                        {
+                            TempHoldH = i;
+                            break;
+                        }
+                    }
                     else
                     {
-                        TempHoldH = i;
-                        break;
+                        if (array[i] > ValueFind)
+                            TempHoldL = i;
+                        else
+                        {
+                            TempHoldH = i;
+                            break;
+                        }
                     }
+                   
                 }
             }
             Console.WriteLine($"Low: {TempHoldL}, High: {TempHoldH}");
             if (!Found)
             {
-                if ((array[TempHoldH] - ValueFind) < (ValueFind - array[TempHoldL]))
-                    MultipleIndex.Add(TempHoldH);
+                if (asc)
+                {
+                    if ((array[TempHoldH] - ValueFind) < (ValueFind - array[TempHoldL]))
+                        MultipleIndex.Add(TempHoldH);
+                    else
+                        MultipleIndex.Add(TempHoldL);
+                }
                 else
-                    MultipleIndex.Add(TempHoldL);
+                {
+                    if ((array[TempHoldH] - ValueFind) > (ValueFind - array[TempHoldL]))
+                        MultipleIndex.Add(TempHoldH);
+                    else
+                        MultipleIndex.Add(TempHoldL);
+                }
+                
             }            
             return MultipleIndex;
         }
