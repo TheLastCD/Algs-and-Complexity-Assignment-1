@@ -66,6 +66,7 @@ namespace Algs_and_Complexity_Assignment_1
                         Merged = l.Net_1_2048;
                         Merged.AddRange(l.Net_3_2048);
                         File = Merged;
+                        TenFift = 50;
                         break;
                     default:
                         Console.WriteLine("Error Net_1_256 Selected by default:");
@@ -150,7 +151,8 @@ namespace Algs_and_Complexity_Assignment_1
                         break;
 
                 }
-                Console.Write("Press enter to got back to the start");
+
+                Console.WriteLine("\nPress enter to got back to the start");
                 Console.ReadLine();
                 Console.Clear();
                 l.operations = 1;

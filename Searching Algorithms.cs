@@ -41,7 +41,7 @@ namespace Algs_and_Complexity_Assignment_1
                             {
                                 if (array[midpoint - i] == ValueFind)
                                     Indexes.Add(midpoint - i);
-                                else
+                                if (array[midpoint - i] != ValueFind && array[midpoint + i] != ValueFind)
                                     break;
                             }
                            
@@ -114,7 +114,7 @@ namespace Algs_and_Complexity_Assignment_1
             List<int> MultipleIndex = new List<int>();
             int TempHoldL = 0, TempHoldH = array.Count - 1;
             bool Found = false;
-            for(int i = 0; i < array.Count(); i++)
+            for(int i = 0; i < array.Count; i++)
             {
                 if(array[i] == ValueFind)
                 {
